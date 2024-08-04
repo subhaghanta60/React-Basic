@@ -1,11 +1,13 @@
-
+import Chai from "./Chai.jsx";
 
 function App() {
  
 
   return (
+    //<> Called Fragment
     <>
-      <h1>Chai Aur Code | Subha</h1>
+      <Chai />
+     <h1>Hi Subha</h1>
     </>
   )
 }
