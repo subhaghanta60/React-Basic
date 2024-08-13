@@ -55,6 +55,7 @@ export class AuthService {
     }
     async logout() {
         try {
+            await this.account.deleteSessions();
             
         } catch (error) {
             console.log("Appright Servicxe:: L:ogout :: Error",error)
