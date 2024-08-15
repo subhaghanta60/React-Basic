@@ -15,6 +15,7 @@ export class Service {
     }
 
     async createPost({title,slug,content,featuredImage,status,userId}){
+        console.log(userId);
         try {
             return await this.databases.createDocument(
                 conf.appwriteDatabaseId,
@@ -23,8 +24,8 @@ export class Service {
                 {
                     title,
                     content,
-                    featuredImage,
                     status,
+                    featuredImage,
                     userId
                 }
 
@@ -133,10 +134,12 @@ export class Service {
     }
 
     getFilePreview(fileId){
-        return this.bucket.getFilePreview(
+       const ImgURL = this.bucket.getFilePreview(
             conf.appwriteBucketId,
             fileId
         )
+        
+        return ImgURL.href;
     }
 
 }

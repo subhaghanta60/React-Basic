@@ -1,7 +1,7 @@
-import {useCallback} from 'react'
+import {useCallback,React,useEffect} from 'react'
 import { useForm } from 'react-hook-form'
 import {Button,Input,Select,RTE} from "../index"
-import AppwriteService from '../../appwrite/config'
+import appwriteService from '../../appwrite/config'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
@@ -17,15 +17,16 @@ function PostForm({postData}) {
         }
     });
 
-    const userData =useSelector(state => state.user.userData)
+    const userDat =useSelector((state) => (state.auth.userData) )
 
     const submit = async (data) => {
         if(postData){
-           const file =   data.image[0]? AppwriteService.uploadFile(data.image[0]) : null
+            
+           const file =   data.featuredImage[0]? appwriteService.uploadFile(data.featuredImage[0]) : null
             if(file){
-                AppwriteService.deleteFile(postData.featuredImage)
+                appwriteService.deleteFile(postData.featuredImage)
             }
-            const dbPost = await AppwriteService.updatePost(postData.$id, {
+            const dbPost = await appwriteService.updatePost(postData.$id, {
                 ...data,
                 featuredImage:file ? file.$id :undefined
             })
@@ -34,13 +35,18 @@ function PostForm({postData}) {
             }
 
         } else {
-            const file = await AppwriteService.uploadFile(data.images[0]);
+           
+            const file = await appwriteService.uploadFile(data.featuredImage[0]);
             if(file){
-                const fileId = file.$id
-                data.featuredImage.fileId
-               const dbPost = await AppwriteService.createPost({
+                
+              
+                data.featuredImage =file.$id;
+                
+               const dbPost = await appwriteService.createPost({
+                
                     ...data,
-                    userId: userData.$id,
+                    
+                    userId: userDat.userData.$id,
                 })
                 if(dbPost){
                     navigate(`/post/${dbPost.$id}`)
@@ -53,13 +59,14 @@ function PostForm({postData}) {
            return value
                     .trim()
                     .toLowerCase()
-                    .replace(/^[a-zA-Z\d\d]+/g, '-')
+                    .replace(/[^a-zA-Z\d\s]+/g, "-")
+                    .replace(/\s/g, "-");
                     
               }
         return ''
     },[])
 
-    React.useEffect(()=> {
+   useEffect(()=> {
 
         const subscription = watch((value,{name})=> {
             if(name ==='title'){
@@ -99,13 +106,13 @@ function PostForm({postData}) {
                     type="file"
                     className="mb-4"
                     accept="image/png, image/jpg, image/jpeg, image/gif"
-                    {...register("image", { required: !post })}
+                    {...register("featuredImage", { required: !postData })}
                 />
-                {post && (
+                {postData && (
                     <div className="w-full mb-4">
                         <img
-                            src={appwriteService.getFilePreview(post.featuredImage)}
-                            alt={post.title}
+                            src={appwriteService.getFilePreview(postData.featuredImage)}
+                            alt={postData.title}
                             className="rounded-lg"
                         />
                     </div>
@@ -116,8 +123,8 @@ function PostForm({postData}) {
                     className="mb-4"
                     {...register("status", { required: true })}
                 />
-                <Button type="submit" bgColor={post ? "bg-green-500" : undefined} className="w-full">
-                    {post ? "Update" : "Submit"}
+                 <Button type="submit" bgColor={postData ? "bg-green-500" : undefined} className="w-full">
+                    {postData ? "Update" : "Submit"}
                 </Button>
             </div>
         </form>

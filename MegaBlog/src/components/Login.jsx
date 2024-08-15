@@ -1,23 +1,23 @@
 import {useState} from 'react';
 import {Link,useNavigate} from 'react-router-dom';
 import {login as authLogin} from '../store/authSlice'
-import {button,Input,Logo} from "./index"
+import {Button, Input,Logo} from "./index"
 import { useDispatch } from 'react-redux';
-import service from '../appwrite/config';
+import authService from '../appwrite/auth';
 import { useForm } from 'react-hook-form';
 
 function Login() {
     const navigate= useNavigate();
     const dispatch =useDispatch()
-    const [register,handleSubmit] = useForm()
+    const {register,handleSubmit} = useForm()
     const [error,setError] =useState("")
 
     const login = async (data) => {
         setError("")
         try {
-            const session = await service.login(data)
+            const session = await authService.login(data)
             if(session){
-                const userData = await service.getCurrentUSer();
+                const userData = await authService.getCurrentUSer();
                 if(userData) dispatch(authLogin(userData));
 
                 navigate("/")
@@ -63,9 +63,8 @@ function Login() {
                             {...register("email", {
                                 required:true,
                                 validate: {
-                                    matchPattern : (value) => {
-                                        /^([\w\.\-_]+)?\w+@[\w-_]+(\.\w+){1,}$/.text(value) || "Email Address must be Valid address"
-                                    }
+                                    matchPatern: (value) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
+                                "Email address must be a valid address",
                                 }
                             })}
 
@@ -79,10 +78,10 @@ function Login() {
                             })}
                         />
                         
-                       <button
+                       <Button
                         type='submit'
                         className='w-full'
-                       >Sign In</button>
+                       >Sign In</Button>
                     </div>
 
 

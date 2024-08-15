@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import authService, { AuthService } from '../appwrite/auth'
+import authService from '../appwrite/auth'
 import {Link,useNavigate} from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { login } from '../store/authSlice'
@@ -11,12 +11,12 @@ function Signup() {
     const dispatch =useDispatch();
     const navigate = useNavigate();
     const [error,setError] = useState("");
-    const (register,handleSubmit) =useForm()
+    const {register,handleSubmit} =useForm();
 
-    const create = async(data) => {
+    const create = async (data) => {
         setError("");
         try {
-            const userDate = await AuthService.createAccount(data);
+            const userDate = await authService.createAccount(data);
             if(userDate){
                 const currentUser =await authService.getCurrentUSer()
                 if (currentUser) dispatch(login(currentUser))
@@ -73,9 +73,8 @@ function Signup() {
                             {...register("email", {
                                 required:true,
                                 validate: {
-                                    matchPattern : (value) => {
-                                        /^([\w\.\-_]+)?\w+@[\w-_]+(\.\w+){1,}$/.text(value) || "Email Address must be Valid address"
-                                    }
+                                    matchPatern: (value) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
+                                "Email address must be a valid address",
                                 }
                             })}
 
@@ -89,10 +88,10 @@ function Signup() {
                                 required: true
                             })}
                     />
-                    <button
+                    <Button
                         type='submit'
                         className='w-full'
-                    >Create Account</button>
+                    >Create Account</Button>
 
                 </div>
 

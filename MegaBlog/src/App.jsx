@@ -5,7 +5,7 @@ import authService from "./appwrite/auth"
 import './App.css'
 import { Footer, Header } from './components'
 import {login,logout} from "./store/authSlice"
-
+import { Outlet } from 'react-router-dom'
 function App() {
   const [loading,setLoading]=useState(true);
   const dispatch = useDispatch();
@@ -31,7 +31,7 @@ function App() {
         <div className='w-full block'>
           <Header />
             <main>
-           
+            TODO:  <Outlet />
             </main>
          
           <Footer />

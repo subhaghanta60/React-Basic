@@ -4,8 +4,9 @@ import { useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 
 function Header() {
-  const authStatus = useSelector((state) => state.auth.status)
-  const Navigate =useNavigate()
+  const authStatus = useSelector((state) => (state.auth.status))
+ 
+  const navigate = useNavigate()
 
   const navItems = [
     {
@@ -48,7 +49,7 @@ function Header() {
               Items.active ? (
                 <li key={Items.name}>
                   <button
-                    onClick={()=>Navigate(Items.slug)}
+                    onClick={()=>navigate(Items.slug)}
                     className="inline-bock px-6 py-2 duration-200hover:bg-blue-100 rounded-full"
                   
                   >{Items.name}</button>
