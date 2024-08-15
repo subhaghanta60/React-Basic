@@ -1,4 +1,4 @@
-import {useEffect,useState} from 'react';
+import {useState} from 'react';
 import {Link,useNavigate} from 'react-router-dom';
 import {login as authLogin} from '../store/authSlice'
 import {button,Input,Logo} from "./index"
@@ -41,7 +41,7 @@ function Login() {
                 Sign In To Your Account
             </h2>
             <p className='mt-2 text-center text-base text-black/60'>
-                    Donn't have any Account 
+                    Donn$apos;t have any Account 
                     <Link
                      to="/signup"
                      className='font-medium text-primary transition-allduration-200 hover:underline'
